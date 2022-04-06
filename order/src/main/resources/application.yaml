@@ -9,7 +9,7 @@ spring:
     exchanges:
       checkout: ${RABBITMQ_CHECKOUT_EX:checkout_ex}
     prefixes:
-      checkout: ${RABBITMQ_CHECKOUT_PREFIX:checkout.#}
+      checkout: ${RABBITMQ_CHECKOUT_PREFIX:checkout}
     queues: 
       checkout: ${RABBITMQ_CHECKOUT_QUEUE:checkout_queue}
 

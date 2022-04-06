@@ -34,7 +34,7 @@ public class RabbitMQConfig {
     public Binding binding(@Qualifier("checkoutQueue") Queue queue,
             @Qualifier("checkoutExchange") TopicExchange exchange,
             @Value("${spring.rabbitmq.prefixes.checkout}") String prefix) {
-        return BindingBuilder.bind(queue).to(exchange).with("prefix");
+        return BindingBuilder.bind(queue).to(exchange).with(prefix);
     }
 
     @Bean

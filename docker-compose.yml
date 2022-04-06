@@ -29,7 +29,7 @@ services:
      RABBITMQ_USERNAME: guest
      RABBITMQ_PASSWORD: guest
      RABBITMQ_CHECKOUT_EX: checkout_ex
-     RABBITMQ_CHECKOUT_PREFIX: checkout.#
+     RABBITMQ_CHECKOUT_PREFIX: checkout
      RABBITMQ_CHECKOUT_QUEUE: checkout_queue
      REDIS_HOST: redis
      REDIS_PORT: 6379
@@ -41,6 +41,29 @@ services:
     links:
     - redis
     - rabbitmq
+
+  checkout:
+    container_name: checkout-ms
+    image: paulogabrieljb/ms-checkout:0.1
+    environment:
+     RABBITMQ_HOST: rabbitmq
+     RABBITMQ_PORT: 5672
+     RABBITMQ_USERNAME: guest
+     RABBITMQ_PASSWORD: guest
+     RABBITMQ_CHECKOUT_EX: checkout_ex
+     RABBITMQ_CHECKOUT_PREFIX: checkout
+     RABBITMQ_CHECKOUT_QUEUE: checkout_queue
+     PRODUCT_URL: 'products-ms:8000'
+    networks:
+    - microservices
+    depends_on:
+    - rabbitmq
+    - products
+    links:
+    - products
+    - rabbitmq
+    ports:
+    - "8082:8082"
 
   redis:
     container_name: redis
