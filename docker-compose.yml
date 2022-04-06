@@ -4,7 +4,7 @@ services:
 
   products:
     container_name: products-ms
-    image: paulogabrieljb/ms-products:0.1
+    image: paulogabrieljb/ms-products:0.2
     ports:
     - "8000:8000"
     networks:
