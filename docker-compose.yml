@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+
+  products:
+    container_name: products-ms
+    image: paulogabrieljb/ms-products:0.1
+    ports:
+    - "8000:8000"
+    networks:
+    - microservices
+  
+  catalog:
+    container_name: catalog-ms
+    image: paulogabrieljb/ms-catalog:0.1
+    environment:
+      PRODUCT_URL: 'products-ms:8000'
+    ports:
+    - "3000:3000"
+    networks:
+    - microservices
+
+
+networks:
+  microservices:

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>MVC</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+</head>
+
+<body>
+
+    <ul>
+      <% for (let product of products) { %>
+        <li>
+          <h2><%= product.product %></h2> <strong>Price: $ <%= product.price %> </strong>
+        </li>
+      <% } %>
+    </ul>
+
+</body>
+
+</html>
