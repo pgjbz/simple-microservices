@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: @project.name@
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
+    exchanges:
+      checkout: ${RABBITMQ_CHECKOUT_EX:checkout_ex}
+    prefixes:
+      checkout: ${RABBITMQ_CHECKOUT_PREFIX:checkout.#}
+    queues: 
+      checkout: ${RABBITMQ_CHECKOUT_QUEUE:checkout_queue}
+
+redis:
+  host: ${REDIS_HOST:localhost}
+  port: ${REDIS_PORT:6379}

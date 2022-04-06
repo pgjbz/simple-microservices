@@ -20,6 +20,27 @@ services:
     networks:
     - microservices
 
+  redis:
+    container_name: redis-ms
+    image: redis:6.2-alpine
+    ports:
+    - "6379:6379"
+    networks:
+    - microservices
+
+  rabbitmq:
+    container_name: 'rabbitmq'
+    image: rabbitmq:3-management-alpine
+    ports:
+    - "5672:5672"
+    - "15672:15672"
+    networks: 
+    - microservices
+    volumes: 
+    - rabbitmq_vol:/var/lib/rabbitmq
 
 networks:
   microservices:
+
+volumes:
+  rabbitmq_vol:
