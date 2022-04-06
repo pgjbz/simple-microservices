@@ -20,8 +20,30 @@ services:
     networks:
     - microservices
 
+  order:
+    container_name: order-ms
+    image: paulogabrieljb/ms-order:0.1
+    environment:
+     RABBITMQ_HOST: rabbitmq
+     RABBITMQ_PORT: 5672
+     RABBITMQ_USERNAME: guest
+     RABBITMQ_PASSWORD: guest
+     RABBITMQ_CHECKOUT_EX: checkout_ex
+     RABBITMQ_CHECKOUT_PREFIX: checkout.#
+     RABBITMQ_CHECKOUT_QUEUE: checkout_queue
+     REDIS_HOST: redis
+     REDIS_PORT: 6379
+    networks:
+    - microservices
+    depends_on:
+    - redis
+    - rabbitmq
+    links:
+    - redis
+    - rabbitmq
+
   redis:
-    container_name: redis-ms
+    container_name: redis
     image: redis:6.2-alpine
     ports:
     - "6379:6379"
@@ -29,7 +51,7 @@ services:
     - microservices
 
   rabbitmq:
-    container_name: 'rabbitmq'
+    container_name: rabbitmq
     image: rabbitmq:3-management-alpine
     ports:
     - "5672:5672"
