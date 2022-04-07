@@ -33,7 +33,6 @@ func Notify(payload []byte, exchange string, routingKey string, ch *amqp.Channel
 		false,
 		false,
 		amqp.Publishing{
-			ContentType: "application/json",
 			Body:        []byte(payload),
 		})
 
