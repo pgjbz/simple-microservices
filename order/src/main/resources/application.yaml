@@ -8,10 +8,13 @@ spring:
     password: ${RABBITMQ_PASSWORD:guest}
     exchanges:
       checkout: ${RABBITMQ_CHECKOUT_EX:checkout_ex}
+      payment: ${RABBITMQ_PAYMENT_EX:payment_ex}
     prefixes:
       checkout: ${RABBITMQ_CHECKOUT_PREFIX:checkout}
+      payment: ${RABBITMQ_PAYMENT_PREFIX:payment}
     queues: 
       checkout: ${RABBITMQ_CHECKOUT_QUEUE:checkout_queue}
+      payment: ${RABBITMQ_PAYMENT_QUEUE:payment_queue}
 
 redis:
   host: ${REDIS_HOST:localhost}
