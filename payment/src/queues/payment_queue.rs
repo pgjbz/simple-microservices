@@ -41,6 +41,7 @@ impl<'a> PaymentQueue<'a> {
                 }
             }
         }
+        drop(&self.thread_pool);
         conn.close()?;
         Ok(())
     }
