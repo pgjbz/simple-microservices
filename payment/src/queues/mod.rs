@@ -1,1 +1,1 @@
-pub mod payment_queue;
+pub mod queue;

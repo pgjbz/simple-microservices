@@ -1,15 +1,21 @@
-use std::{thread, sync::{Arc, Mutex, mpsc}, marker::PhantomData};
+use std::{
+    marker::PhantomData,
+    sync::{mpsc, Arc, Mutex},
+    thread,
+};
 
 use super::Message;
 
 pub struct Worker<T: Send + 'static> {
     _id: usize,
     pub thread: Option<thread::JoinHandle<()>>,
-    _marker: PhantomData<T>
+    _marker: PhantomData<T>,
 }
 
-impl<T> Worker<T> 
-where T: Send {
+impl<T> Worker<T>
+where
+    T: Send,
+{
     pub fn new(id: usize, receiver: Arc<Mutex<mpsc::Receiver<Message<T>>>>) -> Self {
         let thread = thread::spawn(move || loop {
             let message = receiver.lock().unwrap().recv().unwrap(); //while let (and if let and match) does not drop temporary values until the end of the associated block.
@@ -28,7 +34,7 @@ where T: Send {
         Self {
             _id: id,
             thread: Some(thread),
-            _marker: PhantomData::default()
+            _marker: PhantomData::default(),
         }
     }
 }

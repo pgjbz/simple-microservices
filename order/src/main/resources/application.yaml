@@ -9,12 +9,15 @@ spring:
     exchanges:
       checkout: ${RABBITMQ_CHECKOUT_EX:checkout_ex}
       payment: ${RABBITMQ_PAYMENT_EX:payment_ex}
+      order: ${RABBITMQ_ORDER_EX:order_ex}
     prefixes:
       checkout: ${RABBITMQ_CHECKOUT_PREFIX:checkout}
       payment: ${RABBITMQ_PAYMENT_PREFIX:payment}
+      order: ${RABBITMQ_ORDER_PREFIX:order}
     queues: 
       checkout: ${RABBITMQ_CHECKOUT_QUEUE:checkout_queue}
       payment: ${RABBITMQ_PAYMENT_QUEUE:payment_queue}
+      order: ${RABBITMQ_ORDER_QUEUE:order_queue}
 
 redis:
   host: ${REDIS_HOST:localhost}

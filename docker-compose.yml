@@ -4,7 +4,7 @@ services:
 
   products:
     container_name: products-ms
-    image: paulogabrieljb/ms-products:0.2
+    image: paulogabrieljb/ms-products:0.1
     ports:
     - "8000:8000"
     networks:
@@ -22,7 +22,7 @@ services:
 
   order:
     container_name: order-ms
-    image: paulogabrieljb/ms-order:0.2
+    image: paulogabrieljb/ms-order:0.1
     environment:
      RABBITMQ_HOST: rabbitmq
      RABBITMQ_PORT: 5672
@@ -34,6 +34,9 @@ services:
      RABBITMQ_PAYMENT_EX: payment_ex
      RABBITMQ_PAYMENT_PREFIX: payment
      RABBITMQ_PAYMENT_QUEUE: payment_queue
+     RABBITMQ_ORDER_EX: order_ex
+     RABBITMQ_ORDER_PREFIX: order
+     RABBITMQ_ORDER_QUEUE: order_queue
      REDIS_HOST: redis
      REDIS_PORT: 6379
     networks:
@@ -44,6 +47,30 @@ services:
     links:
     - redis
     - rabbitmq
+
+  payment:
+    image: paulogabrieljb/ms-payment:0.1
+    container_name: payment-ms
+    environment:
+     RABBITMQ_HOST: rabbitmq
+     RABBITMQ_PORT: 5672
+     RABBITMQ_USERNAME: guest
+     RABBITMQ_PASSWORD: guest
+     RABBITMQ_PAYMENT_EX: payment_ex
+     RABBITMQ_PAYMENT_PREFIX: payment
+     RABBITMQ_PAYMENT_QUEUE: payment_queue
+     RABBITMQ_QUEUE_EX: order_ex
+     RABBITMQ_QUEUE_PREFIX: order
+     RABBITMQ_QUEUE_QUEUE: order_queue
+    restart: on-failure
+    depends_on:
+    - redis
+    - rabbitmq
+    links:
+    - redis
+    - rabbitmq
+    networks:
+    - microservices
 
   checkout:
     container_name: checkout-ms

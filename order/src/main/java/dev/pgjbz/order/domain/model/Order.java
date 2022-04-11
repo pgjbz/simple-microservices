@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import dev.pgjbz.order.domain.enums.Status;
 
 public record Order(
-    UUID uuid,
+    String uuid,
     String name,
     String email,
     String phone,

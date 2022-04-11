@@ -49,4 +49,21 @@ public class RabbitMQConfig {
         return BindingBuilder.bind(queue).to(exchange).with(prefix);
     }
 
+    @Bean(name = "orderQueue")
+    public Queue orderQueue(@Value("${spring.rabbitmq.queues.order}") String queue) {
+        return new Queue(queue, false);
+    }
+
+    @Bean(name = "orderExchange")
+    public TopicExchange orderExchange(@Value("${spring.rabbitmq.exchanges.order}") String exchange) {
+        return new TopicExchange(exchange);
+    }
+
+    @Bean(name = "orderBinding")
+    public Binding orderBinding(@Qualifier("orderQueue") Queue queue,
+            @Qualifier("orderExchange") TopicExchange exchange,
+            @Value("${spring.rabbitmq.prefixes.order}") String prefix) {
+        return BindingBuilder.bind(queue).to(exchange).with(prefix);
+    }
+    
 }

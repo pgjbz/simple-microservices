@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import dev.pgjbz.order.domain.enums.Status;
 import dev.pgjbz.order.domain.model.Order;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -35,18 +36,33 @@ public class ReceiveMessageHandler {
     @RabbitListener(queues = "${spring.rabbitmq.queues.checkout}")
     public void handleMessage(String message) {
         try {
-            log.info("processing message {}", message);
+            log.info("processing message from checkout queue: {}", message);
             var order  = orderToSave(mapper.readValue(message, Order.class));
-            redisOps.set(order.uuid().toString(), order).block();
-            rabbitTemplate.send(paymentExchange, paymentPrefix, new Message(message.getBytes()));
+            redisOps.set(order.uuid(), order).block();
+            rabbitTemplate.send(paymentExchange, paymentPrefix, new Message(orderToJson(order).getBytes()));
         } catch (JsonProcessingException e) {
             log.error("error in operation {}", message);
         }
     }
 
+    @SneakyThrows
+    private String orderToJson(Order order) {
+        return mapper.writeValueAsString(order);
+    }
     private Order orderToSave(Order order) {
-        return new Order(UUID.randomUUID(), order.name(), order.email(), order.phone(), order.productId(),
+        return new Order(UUID.randomUUID().toString(), order.name(), order.email(), order.phone(), order.productId(),
                 Status.PENDING, LocalDateTime.now());
+    }
+
+    @RabbitListener(queues = "${spring.rabbitmq.queues.order}")
+    public void handleMessageOrder(String message) {
+        try {
+            log.info("processing message from order queue: {}", message);
+            var order = mapper.readValue(message, Order.class);
+            redisOps.set(order.uuid(), order).block();
+        } catch (JsonProcessingException e) {
+            log.error("error in operation {}", message);
+        }
     }
 
 }
