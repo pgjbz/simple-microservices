@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: checkout
+spec:
+  selector:
+    matchLabels:
+      app: checkout
+
+  template:
+    metadata:
+      labels:
+        app: checkout
+    spec:
+      containers:
+        - name: checkout
+          image: paulogabrieljb/ms-checkout:0.1
+          ports:
+            - containerPort: 8082
+          env:
+            - name: PRODUCT_URL
+              value: "http://product-service:8000"
+            - name: RABBITMQ_HOST
+              value: "rabbitmq-service"
+            - name: RABBITMQ_PORT
+              value: "5672"
+            - name: RABBITMQ_USERNAME
+              value: "guest"
+            - name: RABBITMQ_PASSWORD
+              value: "guest"
+            - name: RABBITMQ_CHECKOUT_EX
+              value: "checkout_ex"
+            - name: RABBITMQ_CHECKOUT_PREFIX
+              value: "checkout"
+            - name: RABBITMQ_CHECKOUT_QUEUE
+              value: "checkout_queue"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: checkout-service
+  labels:
+    app: checkout-service
+spec:
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 8082
+  selector:
+    app: checkout

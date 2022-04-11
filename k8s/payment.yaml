@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment
+spec:
+  selector:
+    matchLabels:
+      app: payment
+
+  template:
+    metadata:
+      labels:
+        app: payment
+    spec:
+      containers:
+        - name: payment
+          image: paulogabrieljb/ms-payment:0.1
+          env:
+          - name: RABBITMQ_HOST
+            value: "rabbitmq-service"
+          - name: RABBITMQ_PORT
+            value: "5672"
+          - name: RABBITMQ_USERNAME
+            value: "guest"
+          - name: RABBITMQ_PASSWORD
+            value: "guest"
+          - name: RABBITMQ_PAYMENT_EX
+            value: "payment_ex"
+          - name: RABBITMQ_PAYMENT_PREFIX
+            value: "payment"
+          - name: RABBITMQ_PAYMENT_QUEUE
+            value: "payment_queue"
+          - name: RABBITMQ_ORDER_EX
+            value: "order_ex"
+          - name: RABBITMQ_ORDER_PREFIX
+            value: "order"
+          - name: RABBITMQ_ORDER_QUEUE
+            value: "order_queue"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: payment-service
+  labels:
+    app: payment-service
+spec:
+  ports:
+    - protocol: TCP
+      port: 65535
+  selector:
+    app: payment

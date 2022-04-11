@@ -46,4 +46,8 @@ docker-compose down
 
 ### Note
 
-all images necessary are uploaded to my docker hub, so is not necessary to buid microservices and docker images
+All images necessary are uploaded to my docker hub, so is not necessary to buid microservices and docker images
+
+# Kubernetes
+
+All kubernetes files are in [k8s folder](./k8s/) folder, yes environment variables are in files, its because this repo of study not focus on this thing, only in concept of microservices

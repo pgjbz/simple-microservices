@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order
+spec:
+  selector:
+    matchLabels:
+      app: order
+
+  template:
+    metadata:
+      labels:
+        app: order
+    spec:
+      containers:
+        - name: order
+          image: paulogabrieljb/ms-order:0.1
+          env:
+          - name: REDIS_HOST
+            value: "redis-service"
+          - name: REDIS_PORT
+            value: "6379"
+          - name: RABBITMQ_HOST
+            value: "rabbitmq-service"
+          - name: RABBITMQ_PORT
+            value: "5672"
+          - name: RABBITMQ_USERNAME
+            value: "guest"
+          - name: RABBITMQ_PASSWORD
+            value: "guest"
+          - name: RABBITMQ_CHECKOUT_EX
+            value: "checkout_ex"
+          - name: RABBITMQ_CHECKOUT_PREFIX
+            value: "checkout"
+          - name: RABBITMQ_CHECKOUT_QUEUE
+            value: "checkout_queue"
+          - name: RABBITMQ_PAYMENT_EX
+            value: "payment_ex"
+          - name: RABBITMQ_PAYMENT_PREFIX
+            value: "payment"
+          - name: RABBITMQ_PAYMENT_QUEUE
+            value: "payment_queue"
+          - name: RABBITMQ_ORDER_EX
+            value: "order_ex"
+          - name: RABBITMQ_ORDER_PREFIX
+            value: "order"
+          - name: RABBITMQ_ORDER_QUEUE
+            value: "order_queue"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-service
+  labels:
+    app: order-service
+spec:
+  ports:
+    - protocol: TCP
+      port: 65535
+  selector:
+    app: order
