@@ -15,6 +15,7 @@ spec:
       containers:
         - name: order
           image: paulogabrieljb/ms-order:0.1
+          
           env:
           - name: REDIS_HOST
             value: "redis-service"
@@ -46,6 +47,7 @@ spec:
             value: "order"
           - name: RABBITMQ_ORDER_QUEUE
             value: "order_queue"
+
 ---
 apiVersion: v1
 kind: Service

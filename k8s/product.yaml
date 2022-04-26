@@ -6,7 +6,7 @@ spec:
   selector:
     matchLabels:
       app: product
-
+  replicas: 1
   template:
     metadata:
       labels:
@@ -15,8 +15,22 @@ spec:
       containers:
         - name: product
           image: paulogabrieljb/ms-products:0.1
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 3
+            periodSeconds: 3
           ports:
           - containerPort: 8000
+          resources:
+            limits:
+              cpu: 500m
+              memory: 1G
+            requests:
+              cpu: 200m
+              memory: 512M
+          
 ---
 apiVersion: v1
 kind: Service
@@ -31,3 +45,18 @@ spec:
       port: 8000
   selector:
     app: product
+
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: product
+  namespace: default
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: product
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 50
