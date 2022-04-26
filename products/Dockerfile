@@ -19,6 +19,8 @@ RUN adduser \
     "${USER}"
 
 RUN cargo build --target x86_64-unknown-linux-musl --release
+RUN strip /app/target/x86_64-unknown-linux-musl/release/products
+
 
 # FROM debian:buster-slim as runner
 FROM scratch as runner

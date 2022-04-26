@@ -1,6 +1,6 @@
 use std::fs;
 
-use rocket::serde::{json::Json, Serialize, Deserialize};
+use rocket::serde::{json::Json, Deserialize, Serialize};
 
 use serde::{de, Deserializer};
 
@@ -16,15 +16,16 @@ struct Product {
 }
 
 fn de_from_str<'de, D>(deserializer: D) -> Result<f64, D::Error>
-    where D: Deserializer<'de>
+where
+    D: Deserializer<'de>,
 {
     let s = String::deserialize(deserializer)?;
     s.trim().parse::<f64>().map_err(de::Error::custom)
 }
 
-#[derive( Deserialize)]
+#[derive(Deserialize)]
 struct ProductWrapper {
-    products: Vec<Product>
+    products: Vec<Product>,
 }
 
 fn load_products() -> Vec<Product> {
@@ -42,13 +43,18 @@ fn find_all() -> Json<Vec<Product>> {
 fn find_by_id(id: &str) -> Json<Option<Product>> {
     for product in load_products() {
         if product.uuid == id {
-            return Json::from(Some(product))
+            return Json::from(Some(product));
         }
     }
     Json::from(None)
 }
 
+#[get("/health")]
+fn ok() -> &'static str {
+    "OK"
+}
+
 #[launch]
 fn rocket() -> _ {
-    rocket::build().mount("/", routes![find_all, find_by_id])
+    rocket::build().mount("/", routes![find_all, find_by_id, ok])
 }
