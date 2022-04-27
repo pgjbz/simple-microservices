@@ -1,4 +1,7 @@
-use amiquip::{Connection, ConsumerMessage, ConsumerOptions, Error, QueueDeclareOptions, Result, Exchange, Publish};
+use amiquip::{
+    Connection, ConsumerMessage, ConsumerOptions, Error, Exchange, Publish, QueueDeclareOptions,
+    Result,
+};
 
 use crate::thread_pool::ThreadPool;
 
@@ -39,8 +42,7 @@ impl<'a> Queue<'a> {
             match message {
                 ConsumerMessage::Delivery(delivery) => {
                     if let Some(ref thread_pool) = self.thread_pool {
-                        thread_pool
-                            .execute(String::from_utf8(delivery.body).unwrap(), f);
+                        thread_pool.execute(String::from_utf8(delivery.body).unwrap(), f);
                     } else {
                         f(String::from_utf8(delivery.body).unwrap());
                     }
@@ -51,11 +53,10 @@ impl<'a> Queue<'a> {
                 }
             }
         }
-        drop(&self.thread_pool);
         Ok(())
     }
 
-    pub fn notify(&mut self, routing_key: &str, message: &str) -> Result<(), Error>{
+    pub fn notify(&mut self, routing_key: &str, message: &str) -> Result<(), Error> {
         let conn = if let Some(ref mut connection) = self.connection {
             connection
         } else {
@@ -63,8 +64,7 @@ impl<'a> Queue<'a> {
         };
         let channel = conn.open_channel(None)?;
         let exchange = Exchange::direct(&channel);
-        exchange
-                .publish(Publish::new(message.as_bytes(), routing_key))?;
+        exchange.publish(Publish::new(message.as_bytes(), routing_key))?;
         Ok(())
     }
 }
