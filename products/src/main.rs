@@ -28,9 +28,15 @@ struct ProductWrapper {
     products: Vec<Product>,
 }
 
+impl From<String> for ProductWrapper {
+    fn from(input: String) -> Self {
+        serde_json::from_str(&input).unwrap()
+    }
+}
+
 fn load_products() -> Vec<Product> {
     let json = fs::read_to_string("products.json").unwrap();
-    let products: ProductWrapper = serde_json::from_str(&json).unwrap();
+    let products: ProductWrapper = json.into();
     products.products
 }
 
