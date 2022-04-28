@@ -1,4 +1,4 @@
-FROM rust:1.59.0 as builder
+FROM docker.io/rust:1.59.0 as builder
 WORKDIR /app
 COPY . .
 RUN rustup target add x86_64-unknown-linux-musl
@@ -23,7 +23,7 @@ RUN strip /app/target/x86_64-unknown-linux-musl/release/products
 
 
 # FROM debian:buster-slim as runner
-FROM scratch as runner
+FROM docker.io/scratch as runner
 WORKDIR /app
 COPY --from=builder /app/target/x86_64-unknown-linux-musl/release/products /app/products
 COPY ./products.json /app/products.json

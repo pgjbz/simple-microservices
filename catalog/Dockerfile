@@ -1,4 +1,4 @@
-FROM node:16
+FROM docker.io/node:16
 
 WORKDIR /usr/src/app
 COPY . .

@@ -4,7 +4,7 @@ services:
 
   products:
     container_name: products-ms
-    image: paulogabrieljb/ms-products:0.1
+    image: docker.io/paulogabrieljb/ms-products:0.1
     ports:
     - "8000:8000"
     networks:
@@ -12,7 +12,7 @@ services:
   
   catalog:
     container_name: catalog-ms
-    image: paulogabrieljb/ms-catalog:0.1
+    image: docker.io/paulogabrieljb/ms-catalog:0.1
     environment:
       PRODUCT_URL: 'products-ms:8000'
     ports:
@@ -22,7 +22,7 @@ services:
 
   order:
     container_name: order-ms
-    image: paulogabrieljb/ms-order:0.1
+    image: docker.io/paulogabrieljb/ms-order:0.1
     environment:
      RABBITMQ_HOST: rabbitmq
      RABBITMQ_PORT: 5672
@@ -49,7 +49,7 @@ services:
     - rabbitmq
 
   payment:
-    image: paulogabrieljb/ms-payment:0.1
+    image: docker.io/paulogabrieljb/ms-payment:0.1
     container_name: payment-ms
     environment:
      RABBITMQ_HOST: rabbitmq
@@ -74,7 +74,7 @@ services:
 
   checkout:
     container_name: checkout-ms
-    image: paulogabrieljb/ms-checkout:0.1
+    image: docker.io/paulogabrieljb/ms-checkout:0.1
     environment:
      RABBITMQ_HOST: rabbitmq
      RABBITMQ_PORT: 5672
@@ -97,7 +97,7 @@ services:
 
   redis:
     container_name: redis
-    image: redis:6.2-alpine
+    image: docker.io/redis:6.2-alpine
     ports:
     - "6379:6379"
     networks:
@@ -105,7 +105,7 @@ services:
 
   rabbitmq:
     container_name: rabbitmq
-    image: rabbitmq:3-management-alpine
+    image: docker.io/rabbitmq:3-management-alpine
     ports:
     - "5672:5672"
     - "15672:15672"
