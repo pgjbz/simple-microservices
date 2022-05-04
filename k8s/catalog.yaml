@@ -20,6 +20,13 @@ spec:
           env:
             - name: PRODUCT_URL
               value: "product-service:8000"
+          resources:
+            limits:
+              cpu: 500m
+              memory: 1G
+            requests:
+              cpu: 200m
+              memory: 512M
 ---
 apiVersion: v1
 kind: Service
@@ -34,3 +41,36 @@ spec:
       port: 3000
   selector:
     app: catalog
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: checkout-ingress
+  labels:
+    name: checkout-ingress
+spec:
+  rules:
+  - host: checkout.info
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/catalog"
+        backend:
+          service:
+            name: catalog-service
+            port: 
+              number: 3000
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: catalog-hpa
+  namespace: default
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: catalog
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 50

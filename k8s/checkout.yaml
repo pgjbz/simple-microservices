@@ -34,6 +34,13 @@ spec:
               value: "checkout"
             - name: RABBITMQ_CHECKOUT_QUEUE
               value: "checkout_queue"
+          resources:
+            limits:
+              cpu: 500m
+              memory: 1G
+            requests:
+              cpu: 200m
+              memory: 512M
 ---
 apiVersion: v1
 kind: Service
@@ -48,3 +55,38 @@ spec:
       port: 8082
   selector:
     app: checkout
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: checkout-ingress
+  labels:
+    name: checkout-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+spec:
+  rules:
+  - host: checkout.info
+    http:
+      paths:
+      - pathType: Prefix
+        path: /(.+)
+        backend:
+          service:
+            name: checkout-service
+            port: 
+              number: 8082
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: catalog-hpa
+  namespace: default
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: catalog
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 50
